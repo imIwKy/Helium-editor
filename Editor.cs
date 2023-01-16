@@ -2,6 +2,7 @@
 class Editor
 {
     private static List<string> page = new List<string>();
+    private static bool canReadInput = true;
 
     static void Main(string[] args)
     {
@@ -61,54 +62,74 @@ class Editor
         {
             cki = Console.ReadKey(true);
 
-            switch(cki.Key)
+            if(cki.Key == ConsoleKey.Escape) {canReadInput = false; break;}
+
+            if((int)cki.Key >= 37 && (int)cki.Key <= 40)
             {
-                case ConsoleKey.LeftArrow:
-                    if(cursorX == 0 && cursorY > 0)
-                    {
-                        cursorX = page[cursorY - 1].Length;
-                        cursorY -= 1;
-                        Console.SetCursorPosition(cursorX, cursorY);
-                    }
-                    else if(cursorX > 0)
-                    {
-                        cursorX -= 1; 
-                        Console.SetCursorPosition(cursorX, cursorY);
-                    }
-                    break;
-                case ConsoleKey.RightArrow:
-                    if(cursorX == page[cursorY].Length && cursorY < page.Count - 1)
-                    {
-                        cursorX = page[cursorY + 1].Length;
-                        cursorY += 1;
-                        Console.SetCursorPosition(cursorX, cursorY);
-                    }
-                    else if(cursorX < page[cursorY].Length)
-                    {
-                        cursorX += 1; 
-                        Console.SetCursorPosition(cursorX, cursorY);
-                    }
-                    break;
-                case ConsoleKey.UpArrow:
-                    if(cursorY == 0) {break;}
-                    else 
-                    {
-                        cursorY -= 1; 
-                        cursorX = page[cursorY].Length; 
-                        Console.SetCursorPosition(cursorX, cursorY);
-                    }
-                    break;
-                case ConsoleKey.DownArrow:
-                    if(cursorY == page.Count - 1) {break;}
-                    else 
-                    {
-                        cursorY += 1; 
-                        cursorX = page[cursorY].Length; 
-                        Console.SetCursorPosition(cursorX, cursorY);
-                    }
-                    break;
+                CursorMovement(cki);
+                continue;
             }
+
+            Console.Write(cki.KeyChar);
+            (cursorX, cursorY) = Console.GetCursorPosition();
+            Console.Write(page[cursorY]);
+            Console.SetCursorPosition(cursorX, cursorY);
         } 
-        while(cki.Key != ConsoleKey.Escape);
+        while(canReadInput);
+
+        Console.Clear();
+    }
+
+    private static void CursorMovement(ConsoleKeyInfo cki)
+    {
+        (int cursorX, int cursorY) = Console.GetCursorPosition();
+
+        switch(cki.Key)
+        {
+            case ConsoleKey.LeftArrow:
+                if(cursorX == 0 && cursorY > 0)
+                {
+                    cursorX = page[cursorY - 1].Length;
+                    cursorY -= 1;
+                    Console.SetCursorPosition(cursorX, cursorY);
+                }
+                else if(cursorX > 0)
+                {
+                    cursorX -= 1; 
+                    Console.SetCursorPosition(cursorX, cursorY);
+                }
+                break;
+            case ConsoleKey.RightArrow:
+                if(cursorX == page[cursorY].Length && cursorY < page.Count - 1)
+                {
+                    cursorX = page[cursorY + 1].Length;
+                    cursorY += 1;
+                    Console.SetCursorPosition(cursorX, cursorY);
+                }
+                else if(cursorX < page[cursorY].Length)
+                {
+                    cursorX += 1; 
+                    Console.SetCursorPosition(cursorX, cursorY);
+                }
+                break;
+            case ConsoleKey.UpArrow:
+                if(cursorY == 0) {break;}
+                else 
+                {
+                    cursorY -= 1; 
+                    cursorX = page[cursorY].Length; 
+                    Console.SetCursorPosition(cursorX, cursorY);
+                }
+                break;
+            case ConsoleKey.DownArrow:
+                if(cursorY == page.Count - 1) {break;}
+                else 
+                {
+                    cursorY += 1; 
+                    cursorX = page[cursorY].Length; 
+                    Console.SetCursorPosition(cursorX, cursorY);
+                }
+                break;
+        }
     }
 }
